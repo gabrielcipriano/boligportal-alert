@@ -1,4 +1,4 @@
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 
 #[derive(Serialize, Debug)]
 pub struct Categories {
@@ -44,6 +44,44 @@ pub struct BoligportalSearchPayload {
     // pub washing_machine: Option<String>,
 }
 
+impl BoligportalSearchPayload {
+    pub fn default() -> BoligportalSearchPayload {
+        BoligportalSearchPayload {
+            categories: Categories {
+                values: vec![
+                    "rental_apartment".to_string(),
+                    "rental_house".to_string(),
+                    "rental_townhouse".to_string()
+                ]
+            },
+            city_level_1: CityLevel {
+                values: vec!["københavn".to_string()]
+            },
+            min_size_m2: 39,
+            max_monthly_rent: 12000,
+            order: "DEFAULT".to_string()
+        }
+    }
+
+    pub fn to_string(&self) -> String {
+        serde_json::to_string(&self).unwrap()
+    }
+}
+
 pub struct BoligportalQueryParams {
     pub offset: i32,
+}
+
+impl BoligportalQueryParams {
+    pub fn new(offset: i32) -> BoligportalQueryParams {
+        BoligportalQueryParams {
+            offset
+        }
+    }
+
+    pub fn to_params_tuples(&self) -> Vec<(&str, String)> {
+        vec![
+            ("offset", self.offset.to_string())
+        ]
+    }
 }
